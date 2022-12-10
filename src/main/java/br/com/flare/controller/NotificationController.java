@@ -8,9 +8,11 @@ import br.com.flare.repositories.FeedRepository;
 import br.com.flare.repositories.NotificationRepository;
 import br.com.flare.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +34,30 @@ public class NotificationController {
 
     List<Notification> notifications = notificationRepository.findAll();
 
-    return ResponseEntity.ok(notifications);
+    List<NotificationDto> notificationDtos = new ArrayList<>();
+    notifications.forEach(notification -> notificationDtos.add(notification.toDTO()));
+
+    return ResponseEntity.ok(notificationDtos);
+
+  }
+
+  @GetMapping(value = "/list/{feed}")
+  public ResponseEntity<?> getByFeed(@PathVariable String feed){
+
+    Optional<Feed> byFeed = feedRepository.findByName(feed);
+    if (byFeed.isEmpty()){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feed não encontrado");
+    }
+
+    List<Notification> notifications = notificationRepository.findByFeed(byFeed.get());
+    if (notifications.isEmpty()){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não há nenhuma notificação neste feed");
+    }
+
+    List<NotificationDto> notificationDtos = new ArrayList<>();
+    notifications.forEach(notification -> notificationDtos.add(notification.toDTO()));
+
+    return ResponseEntity.ok(notificationDtos);
 
   }
 
@@ -41,15 +66,15 @@ public class NotificationController {
 
     Notification notification = notificationDto.toEntity();
 
-    Optional<Feed> feed = feedRepository.findByName(notificationDto.getFeed().getName());
+    Optional<Feed> feed = feedRepository.findByName(notificationDto.getFeed());
     if (feed.isEmpty()){
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feed não encontrado");
     }
 
     notification.setFeed(feed.get());
     notification = notificationRepository.save(notification);
 
-    return ResponseEntity.ok(notification);
+    return ResponseEntity.ok(notification.toDTO());
 
   }
 

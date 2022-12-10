@@ -1,6 +1,5 @@
 package br.com.flare.model;
 
-import br.com.flare.controller.dto.FeedDto;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,10 +22,6 @@ public class Feed {
 
     public Feed(String name) {
         this.name = name;
-    }
-
-    public FeedDto toDTO(){
-       return new FeedDto(this.name);
     }
 
     public Long getId() {

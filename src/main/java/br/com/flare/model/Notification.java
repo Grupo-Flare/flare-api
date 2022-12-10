@@ -1,6 +1,5 @@
 package br.com.flare.model;
 
-import br.com.flare.controller.dto.FeedDto;
 import br.com.flare.controller.dto.NotificationDto;
 import jakarta.persistence.*;
 
@@ -30,7 +29,7 @@ public class Notification {
     }
 
     public NotificationDto toDTO(){
-        return new NotificationDto(this.message, this.feed.toDTO(), this.urgency);
+        return new NotificationDto(this.message, this.feed.getName(), this.urgency);
     }
 
     public Long getId() {
