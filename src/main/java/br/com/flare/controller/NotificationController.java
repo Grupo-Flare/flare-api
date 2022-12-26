@@ -7,6 +7,7 @@ import br.com.flare.repositories.DeviceRepository;
 import br.com.flare.repositories.FeedRepository;
 import br.com.flare.repositories.NotificationRepository;
 import br.com.flare.repositories.UserRepository;
+import br.com.flare.repositories.view.FeedView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,14 +43,14 @@ public class NotificationController {
   }
 
   @GetMapping(value = "/list/{feed}")
-  public ResponseEntity<?> getByFeed(@PathVariable String feed){
+  public ResponseEntity<?> listByFeed(@PathVariable String feed){
 
-    Optional<Feed> byFeed = feedRepository.findByName(feed);
+    Optional<FeedView> byFeed = feedRepository.findByName(feed);
     if (byFeed.isEmpty()){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feed não encontrado");
     }
 
-    List<Notification> notifications = notificationRepository.findByFeed(byFeed.get());
+    List<Notification> notifications = notificationRepository.findByFeed(new Feed(byFeed.get()));
     if (notifications.isEmpty()){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não há nenhuma notificação neste feed");
     }
@@ -66,12 +67,12 @@ public class NotificationController {
 
     Notification notification = notificationDto.toEntity();
 
-    Optional<Feed> feed = feedRepository.findByName(notificationDto.getFeed());
+    Optional<FeedView> feed = feedRepository.findByName(notificationDto.getFeed());
     if (feed.isEmpty()){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feed não encontrado");
     }
 
-    notification.setFeed(feed.get());
+    notification.setFeed(new Feed(feed.get()));
     notification = notificationRepository.save(notification);
 
     return ResponseEntity.ok(notification.toDTO());

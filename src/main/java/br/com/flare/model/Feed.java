@@ -1,5 +1,6 @@
 package br.com.flare.model;
 
+import br.com.flare.repositories.view.FeedView;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -22,6 +23,11 @@ public class Feed {
 
     public Feed(String name) {
         this.name = name;
+    }
+
+    public Feed(FeedView feedView) {
+       this.id = feedView.getId();
+       this.name = feedView.getName();
     }
 
     public Long getId() {
