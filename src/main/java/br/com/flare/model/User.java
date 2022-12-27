@@ -15,9 +15,6 @@ public class User {
     private String name;
     private String email;
 
-    @OneToMany
-    private List<Device> devices;
-
     public User() {
     }
 
@@ -37,11 +34,4 @@ public class User {
         this.email = email;
     }
 
-    public List<Device> getDevices() {
-        return devices;
-    }
-
-    public void setDevices(List<Device> devices) {
-        this.devices = devices;
-    }
 }

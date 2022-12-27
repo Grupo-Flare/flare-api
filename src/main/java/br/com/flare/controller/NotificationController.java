@@ -3,7 +3,6 @@ package br.com.flare.controller;
 import br.com.flare.controller.dto.NotificationDto;
 import br.com.flare.model.Feed;
 import br.com.flare.model.Notification;
-import br.com.flare.repositories.DeviceRepository;
 import br.com.flare.repositories.FeedRepository;
 import br.com.flare.repositories.NotificationRepository;
 import br.com.flare.repositories.UserRepository;
@@ -23,8 +22,6 @@ public class NotificationController {
 
   @Autowired
   private UserRepository userRepository;
-  @Autowired
-  private DeviceRepository deviceRepository;
   @Autowired
   private NotificationRepository notificationRepository;
   @Autowired
