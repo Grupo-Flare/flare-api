@@ -1,10 +1,8 @@
 package br.com.flare.model;
 
+import br.com.flare.controller.dto.UserDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
-import java.awt.*;
 import java.util.List;
 
 @Entity
@@ -20,6 +18,11 @@ public class User {
     private String email;
 
     public User() {
+    }
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 
     public String getName() {
@@ -38,4 +41,7 @@ public class User {
         this.email = email;
     }
 
+    public UserDto toDTO() {
+        return new UserDto(this.name, this.email);
+    }
 }
