@@ -7,6 +7,7 @@ import br.com.flare.repositories.FeedRepository;
 import br.com.flare.repositories.NotificationRepository;
 import br.com.flare.repositories.UserRepository;
 import br.com.flare.repositories.view.FeedView;
+import br.com.flare.sender.NotificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,9 @@ public class NotificationController {
   private NotificationRepository notificationRepository;
   @Autowired
   private FeedRepository feedRepository;
+
+  @Autowired
+  private NotificationSender notificationSender;
 
   @GetMapping("/list")
   public ResponseEntity<?> listAllNotifications() {
@@ -68,6 +72,8 @@ public class NotificationController {
     if (feed.isEmpty()){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feed não encontrado");
     }
+
+    notificationSender.sendNotification(notification.getMessage(), notification.getFeed());
 
     notification.setFeed(new Feed(feed.get()));
     notification = notificationRepository.save(notification);

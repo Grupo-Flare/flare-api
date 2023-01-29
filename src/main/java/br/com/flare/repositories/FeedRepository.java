@@ -20,4 +20,10 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
            "join feeds f on fu.feed_id = f.id\n" +
            "where u.\"name\" = :name", nativeQuery = true)
     List<String> findByUser(String name);
+
+   @Query(value = "select u.email from feeds f \n" +
+           "join feeds_users fu on f.id = fu.feed_id \n" +
+           "join users u on fu.users_id = u.id\n" +
+           "where f.\"name\" = :feed", nativeQuery = true)
+   List<String> findUsersByFeedName(String feed);
 }
